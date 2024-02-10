@@ -9,6 +9,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 	<%@ include file="/pageModule/headPart.jsp" %>
 </head>
+<style>
+#newInput{
+	width : 100%;
+}
+button{
+	padding : 8px;
+	border-radius: 4px;
+	border:none;
+}
+
+</style>
 <body>
 	<%@ include file="/pageModule/header.jsp" %>
 
@@ -97,9 +108,9 @@
 										<label class="form-check-label" for=""chk"">append 여부</label>
 									</div>
 										<h6>선택한 td안에 있는 글자를 아래 P태그에 출력해주세요!</h6>
-									<p id="output" class="text-info">출력란</p> <br/>
-									
-									
+									<p id="output" class="text-info">출력란</p>
+									<br/>
+									<div id="btndiv"></div>
 								</div>
 							</div>
 						</div>
@@ -109,27 +120,87 @@
         </div>
     </section>
     <script type="text/javascript">
-    $('#table_id').on("click","tr", function(){
-    	var title = $(this).find("td:eq(1)").text();
-    	$('#output').html(title);
-    	
-    	// 버튼 추가
-    	var button1 = "<br/><br/><button id='modbtn'>수정</button>&nbsp";
-    	var button2 = "<button id='delbtn'>삭제</button>";
-        $("#output").append(button1);
-        $("#output").append(button2);
-		
+    var lastTitle = ""; // 마지막으로 클릭한 제목 저장
+    
+    $('#table_id tr').on('click', function() {
+        var trIndex = $(this).index();
+        var trItem = $(this).text();
+        console.log(trIndex + "|" + trItem);
         
     });
     
-//     $('input:checkbox[id=chk]').each(function (index){
-//     	if($(this).is(":checked") ==true){
-//     		console.log($(this).val());
-//     	}
-//     }
-    
-    
-    
+    //tr안에 있는 요소를 클릭했을때의 적용되는 함수
+    $('#table_id').on("click","tr", function(){
+    	
+    	//td에 인덱스 1번 (제목)을 변수로 선언 
+    	var titletd = $(this).find("td:eq(1)");
+    	var title = $(this).find("td:eq(1)").text();
+    	
+    	lastTitle = title;
+    	//append 여부 체크
+    	var checked = $('#chk').is(':checked');
+    	var temp = "";
+    	
+        if(checked){
+        	temp = temp + $('#output').append("<br/>"+title);
+        	$('#btndiv').empty();
+        }else{
+	    	$('#output').html(title);
+	    	btnCreate();
+        }
+        
+        
+	    $(document).ready(function(){
+	    	$(document).on('click', '#modbtn', function() {
+				console.log("수정버튼 눌립니다~~");
+				var newInput = $('<input type="text" id="newInput" value="' + title + '">');
+				$('#output').html(newInput);
+				//버튼 바꿔줌 
+				$('#btndiv').empty();
+				btnCreate2();
+				
+	    	});
+	    	$(document).on('click', '#confirmBtn', function() {
+	    	    // 새로 입력된 제목
+	    	    var newTitle = $('#newInput').val();
+	
+	    	    $('#table_id tr:contains("'+ lastTitle +'") td:eq(1)').text(newTitle);
+	    	    $('#output').html(newTitle);
+	    	    $('#btndiv').empty();
+	    	    btnCreate();
+	    	   
+	    	});
+	    	
+	    	$(document).on('click', '#delbtn', function() {
+	    		console.log("삭제버튼 눌립니다~~");
+	    		
+				// 현재 클릭된 행을 찾아서 지운다
+		        $('#table_id tr:contains("'+ lastTitle +'") td:eq(1)').empty();
+       			// 출력란도 비워줌 
+				$('#output').empty();
+				
+		            
+			});
+	    });
+    });
+	// 버튼 추가
+    function btnCreate(){
+		var button1 = "<button id='modbtn' class='btn-warning'>수정</button>";
+       	var button2 = "<button id='delbtn' class='btn-danger'>삭제</button>";
+       	var btns = button1+button2;
+       	$("#btndiv").html(btns);
+   		
+ 		
+    }
+	//수정 버튼 눌렀을때 만들어줄 확인,삭제 버튼
+    function btnCreate2(){
+		var button1 = "<button id='confirmBtn' class='btn-warning'>확인</button>";
+       	var button2 = "<button id='delbtn' class='btn-danger'>삭제</button>";
+        var btns = button1+button2;
+       	
+       	$("#btndiv").html(btns);
+	}
+	
     
     
     </script>
