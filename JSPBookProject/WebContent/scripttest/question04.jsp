@@ -132,11 +132,11 @@ function changeBg(){
 	rnd = Math.floor(rnd)				// 랜덤한 숫자를 정수로 변환하여 인덱스로 사용	
 	
 	var td = $("td").eq(rnd)[0];
-	var name = td.innerHTML;
+	var name = td.innerHTML; 
 	td.style.setProperty("background-color","gold");
 	
-	if(name==""){ //좌석 이름이 비어있는 경우 다시 선택하도록 재귀호출
-		changeBg();
+	if(name === ""){ //좌석 이름이 비어있는 경우 다시 선택하도록 재귀호출
+		return changeBg();
 	}
 	
 	$("#txt").text(name);	//마지막으로 선택된 이름을 #txt에 적용시켜준다.
