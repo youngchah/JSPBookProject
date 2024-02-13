@@ -87,7 +87,7 @@
 							<div class="progress" style="height: 40px;">
 								<div class="progress-bar progress-bar-striped" id="myBar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
 									aria-valuemax="100" style="width: 1px; height: 40px;">
-									<span class="sr-only">60% Complete</span>
+									<span class="sr-only"><span id="progress-now">0</span>% Complete</span>
 								</div>
 							</div>
 							<br/>
@@ -105,25 +105,45 @@
 	
 </body>
 <script type="text/javascript">
-
-function targetUpdate(){
-	let tds = document.getElementsByTagName('td');
-	let tdArr = Array.from(tds);
-	let rnd = Math.random() * tdArr.length;
-	
-	$(tdArr[rnd]).css('backgroundcolor','yellow');
-	
-// 	tdArr[rnd].style.background = 'yellow';
-}
+var progress = 0;  
+var timer;  
 
 function SeatMoveEvent(){
-	let interval = setInterval(targetUpdate, 100);
-	
-	setTimeout(function(){
-		clearInterval(interval);
+	timer = setInterval(() => {
+		changeBg();
+		$("#myBar").attr("aria-valuenow",progress);	//aria-valuenow 속성을 progress 변수의 값으로 설정
+		$("#myBar").css("width",progress+"%");	//진행상황 바를 늘려준다 
+		$("#progress-now").text(progress);
+		if(progress == 100){	//100%가 되면 중지시킴
+			endProgress(); 
+		}
+		progress += 1;	// 1 씩 더해줌  
 		
-	},10100);
+		
+	}, 100);	//0.1초(100ms)마다 setInterval(() => { } 함수를 반복한다 
+}
+
+
+
+function changeBg(){
+	$("td").css("background-color","");	// 모든 td요소의 배경색을 지워준다.
+	var tds = $("td");					// td 요소들을 모두 tds에 담아준다 
+	var rnd = Math.random()*tds.length;	// tds의 length만큼 랜덤한 숫자를 생성한다. 선택할 <td> 요소의 인덱스를 결정하는 데 사용
+	rnd = Math.floor(rnd)				// 랜덤한 숫자를 정수로 변환하여 인덱스로 사용	
 	
+	var td = $("td").eq(rnd)[0];
+	var name = td.innerHTML;
+	td.style.setProperty("background-color","gold");
+	
+	if(name==""){ //좌석 이름이 비어있는 경우 다시 선택하도록 재귀호출
+		changeBg();
+	}
+	
+	$("#txt").text(name);	//마지막으로 선택된 이름을 #txt에 적용시켜준다.
+}
+
+function endProgress() {
+	clearInterval(timer);
 }
 
 

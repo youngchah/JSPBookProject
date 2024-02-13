@@ -296,13 +296,7 @@ $(function(){
 	      }
 	      $("#order-table").html(html);
 	      $("#total").text(totalPrice);
-	      
-	      
 	   });
-	   
-	   
-	   
-	
 	
 	$('#orderBtn').on('click', function() {
 			$("#dArr").val(menuName);
