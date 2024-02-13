@@ -241,6 +241,7 @@
 												<form id="frm" method="post" action="question03_process.jsp">
 													<input type="hidden" name="dataArr" id="dArr"/>
 													<input type="hidden" name="countArr" id="cArr"/>
+													<input type="hidden" name="priceArr" id="pArr"/>
 												</form>
 											</div>
 										</div>
@@ -259,62 +260,58 @@
 	
 </body>
 <script type="text/javascript">
+
 $(function(){
-	var rank = 0; //음료순서
-	var drinkBox = "";
-	var eleBox;
-	var cnt = 1; //음료 수량
-	var price = "";	//가격
+	   var menuName = [];
+	   var cnt = [];
+	   var price = [];
+	   
+	   
+	   $("td").on("click", function(){
+	      var html = "";
+	      var totalPrice = 0;
+	      
+	      var menu = $(this).find("p").text();
+	      var chk = menuName.indexOf(menu);
+	      console.log(chk);
+	      
+	      var pri = parseInt($(this).find("code").text());
+	      
+	      if(chk != -1){ //이미 선택했을 때
+	         cnt[chk]++;
+	         price[chk] += pri;
+	     }else { //새로 선택
+	         menuName.push(menu);
+	         cnt.push(1);
+	         price.push(pri);
+	     }
+	      
+	      for(var i=0; i<menuName.length; i++){
+	         totalPrice += price[i];
+	         
+	         html += "<tr>";
+	         html += "<td>"+menuName[i]+"</td>"+"<td>"+cnt[i]+"</td>"+"<td>"+price[i]+"</td>";
+	         html += "</tr>";
+	         
+	      }
+	      $("#order-table").html(html);
+	      $("#total").text(totalPrice);
+	      
+	      
+	   });
+	   
+	   
+	   
 	
-	var drinkName = [];
-	var prices = [];
 	
-	$("td").on("click", function(){
-		
-		
-		
-// 		for (var i = 0; i < drinkName.length; i++) {
-			
-// 			var select = $(this).find("p").text();
-// 			if(select == drinkName[i] ){
-// 				cnt ++;
-// 				console.log(cnt);
-				
-// 			}
-// 			drinkName[i] = ($(this).find("p").text());
-// 			prices[i] = $(this).find("code").text();
-// 			$("#order-table").html("<tr> <td>"+ drinkName[i] +"</td> <td>" + cnt + "</td> <td>" + prices[i] + "</td> </tr><br/>");
-// 		}
-		
-		
-		if(rank == 0){	//첫번째 클릭
-			drinkName[0] = ($(this).find("p").text());
-			prices[0] = $(this).find("code").text();
-			$("#order-table").html("<tr> <td>"+ drinkName[0] +"</td> <td>" + cnt + "</td> <td>" + prices[0] + "</td> </tr><br/>");
-			
-			rank ++;
-			for (var i = 0; i < drinkName.length; i++) {
-				drinkName[i] = ($(this).find("p").text());
-				prices[i] = $(this).find("code").text();
-				$("#order-table").html("<tr> <td>"+ drinkName[i] +"</td> <td>" + cnt + "</td> <td>" + prices[i] + "</td> </tr><br/>");
-				
-				console.log("옴?");
-			}
-		}else{
-			drinkBox = $(this).find("p").text();
-			price = $(this).find("code").text();
-			$("#order-table").append("<tr> <td>"+ drinkBox +"</td> <td>" + cnt + "</td> <td>" + price + "</td> </td><br/>");
-			
-			rank ++;
-		}
-		
-		
-		
+	$('#orderBtn').on('click', function() {
+			$("#dArr").val(menuName);
+			$("#cArr").val(cnt);
+			$("#pArr").val(price);
+
+			$('#frm').submit();
+		});
+
 	});
-	
-	
-});
-
-
 </script>
 </html>

@@ -106,6 +106,25 @@
 </body>
 <script type="text/javascript">
 
+function targetUpdate(){
+	let tds = document.getElementsByTagName('td');
+	let tdArr = Array.from(tds);
+	let rnd = Math.random() * tdArr.length;
+	
+	$(tdArr[rnd]).css('backgroundcolor','yellow');
+	
+// 	tdArr[rnd].style.background = 'yellow';
+}
+
+function SeatMoveEvent(){
+	let interval = setInterval(targetUpdate, 100);
+	
+	setTimeout(function(){
+		clearInterval(interval);
+		
+	},10100);
+	
+}
 
 
 </script>
