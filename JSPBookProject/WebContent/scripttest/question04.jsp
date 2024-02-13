@@ -134,12 +134,13 @@ function changeBg(){
 	var td = $("td").eq(rnd)[0];
 	var name = td.innerHTML; 
 	td.style.setProperty("background-color","gold");
+
+	$("#txt").text(name);	//마지막으로 선택된 이름을 #txt에 적용시켜준다.
 	
 	if(name === ""){ //좌석 이름이 비어있는 경우 다시 선택하도록 재귀호출
 		return changeBg();
 	}
 	
-	$("#txt").text(name);	//마지막으로 선택된 이름을 #txt에 적용시켜준다.
 }
 
 function endProgress() {
